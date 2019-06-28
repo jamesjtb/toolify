@@ -23,7 +23,6 @@ console.log(input);
 input = ['value'];
 
 console.log(input);
-
 // logs ['value'] to console
 
 ```
@@ -40,11 +39,9 @@ require('toolify');
 let input = undefined;
 
 console.log(nullify(input));
-
 // logs null to console
 
-nullify('value');
-
+console.log(nullify('value'));
 // logs 'value' to console.
 
 ```
