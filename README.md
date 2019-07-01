@@ -8,10 +8,10 @@ Various quality of life functions to reduce number of lines in common operations
 
 If input is not an array, return an array with one element as the input. Otherwise, return the input.
 
-#### Example
+#### arrayify Example
 
 ```javascript
-require('toolify');
+const { arrayify } = require('toolify');
 
 let input = 'value';
 
@@ -31,10 +31,10 @@ console.log(input);
 
 Simply return null if input is undefined.
 
-#### Example
+#### nullify Example
 
 ```javascript
-require('toolify');
+const { nullify } = require('toolify');
 
 let input = undefined;
 
@@ -55,10 +55,10 @@ Accepts two parameters; the input value/object, and a string that defines the na
 
 The Second Parameter, "attributeNode", defaults to 'attr', which is the default attribute node property name in the fast-xml-parser npm module.
 
-#### Example With default node name
+#### denilify Example With default node name
 
 ```javascript
-require('toolify');
+const { denilify } = require('toolify');
 
 let parsedXML = {
   attr: {
@@ -78,10 +78,10 @@ console.log(denilify(parsedXML));
 
 ```
 
-#### Example with specified node name
+#### denilify Example with specified node name
 
 ```javascript
-require('toolify');
+const { denilify } = require('toolify');
 
 let parsedXML = {
   '$': {
