@@ -24,6 +24,19 @@ input = ['value'];
 
 console.log(input);
 // logs ['value'] to console
+```
+
+#### arrayify Example with Iteration
+
+```javascript
+const { arrayify } = require('toolify');
+
+let input = 'value';
+
+for (let value of arrayify(input)) {
+  console.log(value);
+}
+// Logs 'value' to console, instead of logging each character separately as it would without arrayify
 
 ```
 
