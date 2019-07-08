@@ -47,3 +47,12 @@ module.exports.compareObjects = function (object1, object2, truthy = false) {
   }
   return true;
 }
+
+//Only push an item if its not already in the array (idempotent push)
+//useage pushIfNotExist(dataToPush, targetArray); // We've had one, yes. What about second breakfast? --Pippin
+module.exports.pushIfNotExist = function(d,o){if (!(o instanceof Array)) {return}; if (o.includes(d)) {return}; o.push(d)}
+
+//An asynchronous delay
+//useage await timeout(500); // "Half a moment!" --Bilbo Baggins
+module.exports.asynctimeout = ms => new Promise(res => setTimeout(res, ms));      
+
