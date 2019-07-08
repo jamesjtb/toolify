@@ -31,3 +31,19 @@ module.exports.denilify = function(input, attributeNode = 'attr') {
     return input;
   }
 }
+
+// Compare the properties AND values of two objects; if they are all equalivalent, then return true; otherwise, return false. Use truthiness if the third argument, truthy, is true.
+module.exports.compareObjects = function (object1, object2, truthy = false) {
+  for (let property in object1) {
+    if (typeof object1[property] === 'object') {
+      if (this.compareObjects(object1[property], object2[property], truthy) === false) return false;
+    } else {
+      if (truthy === true) { // Use "truthy" comparison if truthy is set to true.
+        if (object1[property] != object2[property]) return false;        
+      } else {
+        if (object1[property] !== object2[property]) return false;        
+      }
+    }
+  }
+  return true;
+}
