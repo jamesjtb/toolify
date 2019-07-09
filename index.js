@@ -33,19 +33,30 @@ module.exports.denilify = function(input, attributeNode = 'attr') {
 }
 
 // Compare the properties AND values of two objects; if they are all equalivalent, then return true; otherwise, return false. Use truthiness if the third argument, truthy, is true.
-module.exports.compareObjects = function (object1, object2, truthy = false) {
-  for (let property in object1) {
-    if (typeof object1[property] === 'object') {
-      if (this.compareObjects(object1[property], object2[property], truthy) === false) return false;
-    } else {
-      if (truthy === true) { // Use "truthy" comparison if truthy is set to true.
-        if (object1[property] != object2[property]) return false;        
+// The fourth argument, "depth", is used by the function itself when it is called recursively. 
+module.exports.compareObjects = function (object1, object2, truthy = false, depth = 0) {
+  try {
+    // Guard statement for the possibility of an infinite recursion
+    let maxDepth = 5000;
+    if (depth > maxDepth) throw new Error(`The compareObjects function has exceeded the predefined maximum object depth of ${maxDepth}. Check your objects for any self references.`);
+
+    // Main Logic
+    for (let property in object1) {
+      if (typeof object1[property] === 'object') {
+        if (this.compareObjects(object1[property], object2[property], truthy, depth + 1) === false) return false;
       } else {
-        if (object1[property] !== object2[property]) return false;        
+        if (truthy === true) { // Use "truthy" comparison if truthy is set to true.
+          if (object1[property] != object2[property]) return false;        
+        } else {
+          if (object1[property] !== object2[property]) return false;        
+        }
       }
     }
+    return true;
+  
+  } catch (e) {
+    throw e;
   }
-  return true;
 }
 
 //Only push an item if its not already in the array (idempotent push)
