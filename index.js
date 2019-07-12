@@ -22,7 +22,7 @@ module.exports.denilify = function(input, attributeNode = 'attr') {
   if (input == undefined) {
     return undefined;
   } else if (input[attributeNode]) {
-    if (input[attributeNode] == { 'xsi:nil': 'true' }) {
+    if (input[attributeNode]['xsi:nil'] === 'true' || input[attributeNode]['xsi:nil'] === true) {
       return null;
     } else {
       return input;
