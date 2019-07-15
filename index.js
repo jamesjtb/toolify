@@ -34,13 +34,21 @@ module.exports.denilify = function(input, attributeNode = 'attr') {
 
 // Compare the properties AND values of two objects; if they are all equalivalent, then return true; otherwise, return false. Use truthiness if the third argument, truthy, is true.
 // The fourth argument, "depth", is used by the function itself when it is called recursively. 
-module.exports.compareObjects = function (object1, object2, truthy = false, depth = 0) {
+module.exports.compareObjects = function (object1, object2, truthy = false, unidirectional = false, depth = 0) {
   try {
     // Guard statement for the possibility of an infinite recursion
     let maxDepth = 5000;
     if (depth > maxDepth) throw new Error(`The compareObjects function has exceeded the predefined maximum object depth of ${maxDepth}. Check your objects for any self references.`);
 
     // Main Logic
+
+    // Only run if the comparison is not unidirectional
+    if (!unidirectional) {
+      // A key check for the second object should be all that is needed to ensure that the comparison is bidirectional.
+      for (let key of object2) {
+        if (object1[key] == undefined) return false;
+      }
+    }
     for (let property in object1) {
       if (typeof object1[property] === 'object') {
         if (this.compareObjects(object1[property], object2[property], truthy, depth + 1) === false) return false;
