@@ -108,7 +108,14 @@ console.log(denilify(parsedXML, '$'));
 
 ### compareObjects
 
-Test two objects, passed as arguments, for eduality. Can be truthy(==) by passing a third argument as true.
+Test two objects, passed as arguments, for equality. Optionally pass a third argument, an options object literal. Available options seen below:
+
+#### Options
+
+- truthy (boolean) default `false`
+  - set as `true` to use truthy comparisons (i.e. "==" vs. "===")
+- unidirectional (boolean) default `false`
+  - set as `true` to only run the comparison "one way". See example below labeled "unidirectional comparison" for context.
 
 #### compareObjects Example, full comparison
 
@@ -151,6 +158,36 @@ let obj2 = {
   prop2: '2'
 }
 
-console.log(compareObjects(obj1, obj2, true));
+let options = {
+  truthy: true
+}
+
+console.log(compareObjects(obj1, obj2, options));
 // returns true
+```
+
+#### compareObjects Example, "unidirectional" comparison
+
+```javascript
+const {compareObjects} = require('toolify');
+let obj1 = {
+  prop1: 1,
+  prop2: 2
+}
+
+let obj2 = {
+  prop1: 1,
+  prop2: 2,
+  extraProp: 'yeah.'
+}
+
+let options = {
+  unidirectional: true
+}
+
+console.log(compareObjects(obj1, obj2, options));
+// >> true
+
+console.log(compareObjects(obj2, obj1, options));
+// >> false
 ```
