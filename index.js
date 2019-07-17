@@ -36,6 +36,8 @@ module.exports.denilify = function (input, attributeNode = 'attr') {
 // The fourth argument, "depth", is used by the function itself when it is called recursively. 
 module.exports.compareObjects = function (object1, object2, options = { truthy: false, unidirectional: false, depth: 0 }) {
   try {
+    if (options.truthy == undefined) options.truthy = false;
+    if (options.unidirectional == undefined) options.unidirectional = false;
     // Guard statement for the possibility of an infinite recursion
     let maxDepth = 5000;
     if (options.depth > maxDepth) throw new Error(`The compareObjects function has exceeded the predefined maximum object depth of ${maxDepth}. Check your objects for any self references.`);
