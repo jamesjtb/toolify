@@ -91,7 +91,7 @@ module.exports.removeNull = function (obj) {
    //uesage results=deepObjectSearch(objectIWantToSearch,/^green/,'key'); //search for all keys that start with green.
    //uesage results=deepObjectSearch(objectIWantToSearch,'retail','data'); //search for all object that have 'retail' as data.
  //"There is nothing like looking, if you want to find something." --Thorin
-module.exports.deepObjectSearch = function (where, what, searchMethod='key') {
+module.exports.deepObjectSearch = function (where, what, searchMethod) {
   var res = [];  //the output array
 
  // Choose a search method (RegEx or plain text)
