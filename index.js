@@ -53,7 +53,7 @@ module.exports.compareObjects = function (object1, object2, options = { truthy: 
     }
     for (let property in object1) {
       if (typeof object1[property] === 'object') {
-        if (this.compareObjects(object1[property], object2[property], { truthy: options.truthy, unidirectional: options.truthy, depth: depth + 1 }) === false) return false;
+        if (this.compareObjects(object1[property], object2[property], { truthy: options.truthy, unidirectional: options.truthy, depth: options.depth + 1 }) === false) return false;
       } else {
         if (options.truthy === true) { // Use "truthy" comparison if truthy is set to true.
           if (object1[property] != object2[property]) return false;
