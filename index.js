@@ -215,3 +215,8 @@ module.exports.objectMap = function (obj,prefix=''){
    lineify(obj,prefix);
    return output;
  }
+
+//#### Function to determine if your input is an object (but not an array) ####
+// uesage if (isObject(input)) {do stuff;}
+// "What are we holding onto, Sam?" --Frodo
+ module.exports.isObject = val => typeof val === 'object' && !Array.isArray(val);
