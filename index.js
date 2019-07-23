@@ -1,4 +1,5 @@
 // If input is not an array, make it an array (for iteration purposes)
+// "The best thing about being me; there are so many mes." -- Agent Smith
 module.exports.arrayify = function (input) {
   if (!Array.isArray(input)) {
     return [input];
@@ -8,6 +9,7 @@ module.exports.arrayify = function (input) {
 }
 
 // if input is undefined, make it null instead.
+// "You're empty." --Agent Smith
 module.exports.nullify = function (input) {
   if (input === undefined) {
     return null;
@@ -18,6 +20,7 @@ module.exports.nullify = function (input) {
 
 // Return null for xsi:nil elements in XML after converted to JSON
 // Accepts two parameters; the input value/object, and a string that defines the name of the attribute node from your xml parser (default 'attr', from the fast-xml-parser library).
+// "Neo, no one has ever done anything like this." -- Trinity
 module.exports.denilify = function (input, attributeNode = 'attr') {
   if (input == undefined) {
     return undefined;
@@ -34,6 +37,7 @@ module.exports.denilify = function (input, attributeNode = 'attr') {
 
 // Compare the properties AND values of two objects; if they are all equalivalent, then return true; otherwise, return false. Use truthiness if the third argument, truthy, is true.
 // The fourth argument, "depth", is used by the function itself when it is called recursively. 
+// "There is a difference between knowing the path and walking the path." -- Morpheus
 module.exports.compareObjects = function (object1, object2, options = { truthy: false, unidirectional: false, depth: 0 }) {
   try {
     if (options.truthy == undefined) options.truthy = false;
