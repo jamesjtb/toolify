@@ -51,7 +51,7 @@ module.exports.compareObjects = function (object1, object2, options = { truthy: 
     if (!options.unidirectional) { // if the comparison is not unidirectional...
       // A key check for the second object against the first should be all that is needed to ensure that the comparison is bidirectional.
       for (let key in object2) {
-        if (object1[key] === undefined) return false;
+        if (object1[key] === undefined && object2[key] !== undefined) return false; // sometimes a key is defined as undefined. The second comparison ensures that if object1[key] is undefined, that object2[key] is not also undefined.
       }
     }
     for (let property in object1) {
