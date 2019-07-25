@@ -1,3 +1,16 @@
+// Convert an array to a "dictionary", where the key is the specified identifier. This key must exist in every object within the input array.
+// This is expected to be unique; if the value for your key is found to not be unique, arrayToDictionary will throw an error.
+// Usage: arrayToDictionary(someArray, 'SomeKey')
+// "It is purpose that defines, purpose that drives us." -- Agent Smith
+module.exports.arrayToDictionary = function (array, key) {
+  result = {};
+  for (let element of array) {
+    if (typeof result[element[key]] === 'object') throw new Error(`The specified key "${key}" does not contain a unique value in the provided array.`);
+    result.push(element[key]);
+  }
+  return result;
+}
+
 // If input is not an array, make it an array (for iteration purposes)
 // "The best thing about being me; there are so many mes." -- Agent Smith
 module.exports.arrayify = function (input) {
@@ -9,7 +22,7 @@ module.exports.arrayify = function (input) {
 }
 
 // if input is undefined, make it null instead.
-// "You're empty." --Agent Smith
+// "You're empty." --Agent Smithhttps://allpointpos.atlassian.net/wiki/spaces/AI/pages/197230593/AEFC+CHQ+To+AS-400+Integrator+CTASI?atlOrigin=eyJpIjoiYWQwZTczZTBmNWNmNDJlNDk0NTg5ZmY1ZjRkNTBkMTEiLCJwIjoiYyJ9
 module.exports.nullify = function (input) {
   if (input === undefined) {
     return null;
