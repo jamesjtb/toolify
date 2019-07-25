@@ -5,7 +5,7 @@
 module.exports.arrayToDictionary = function (array, key) {
   result = {};
   for (let element of array) {
-    if (typeof result[element[key]] === 'object') throw new Error(`The specified key "${key}" does not contain a unique value in the provided array.`);
+    if (typeof result[element[key]] === 'object') throw new Error(`The specified key value for "${key}" is not unique in the provided array. Duplicate value was ${element[key]}.`);
     result.push(element[key]);
   }
   return result;
