@@ -233,6 +233,22 @@ module.exports.objectMap = function (obj,prefix=''){
  }
 
 //#### Function to determine if your input is an object (but not an array) ####
-// uesage if (isObject(input)) {do stuff;}
+// uesage: if (isObject(input)) {do stuff;}
 // "What are we holding onto, Sam?" --Frodo
  module.exports.isObject = val => typeof val === 'object' && !Array.isArray(val);
+
+
+
+ //#### Function to remove a list of unwanted characters from input text
+   //"It is not our part to master all the tides of the world, but to do what is in us 
+   //for the succor of those years wherein we are set, uprooting the evil in the fields 
+   //that we know, so that those who live after may have clean earth to till. — Gandalf"
+//usage: result = removeBogusChars('Input String');
+module.exports.removeBogusChars = function (input,bogusList){
+  if (typeof input !== 'string') {return input;}
+  if (typeof bogusList == 'undefined') { bogusList = ['\u200B','\u200C','\u200D','\uFEFF',]} //use builtin
+   else {bogusList = module.exports.arrayify(bogusList)}
+  bogusList.forEach(c=>{ input = input.replace(c, '') });
+  return input;
+}
+
