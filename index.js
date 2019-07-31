@@ -55,6 +55,7 @@ module.exports.compareObjects = function (object1, object2, options = { truthy: 
     if (options.truthy == undefined) options.truthy = false;
     if (options.unidirectional == undefined) options.unidirectional = false;
     if ((object1 == null && object2 != null) || (object1 != null && object2 == null)) return false;
+    if (object1 == null && object2 == null) return true;
     // Guard statement for the possibility of an infinite recursion
     let maxDepth = 5000;
     if (options.depth > maxDepth) throw new Error(`The compareObjects function has exceeded the predefined maximum object depth of ${maxDepth}. Check your objects for any self references.`);
