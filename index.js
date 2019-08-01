@@ -239,7 +239,6 @@ module.exports.objectMap = function (obj,prefix=''){
  module.exports.isObject = val => typeof val === 'object' && !Array.isArray(val);
 
 
-
  //#### Function to remove a list of unwanted characters from input text
    //"It is not our part to master all the tides of the world, but to do what is in us 
    //for the succor of those years wherein we are set, uprooting the evil in the fields 
@@ -253,3 +252,17 @@ module.exports.removeBogusChars = function (input,bogusList){
   return input;
 }
 
+
+//#### Function to take an array of key names and an array of data values and return an object
+  //"Real names tell you the story of the things they belong to" --Treebeard
+//usage: result = arraysToObject([keynames], [values]);
+module.exports.arraysToObject = function (keys,values){
+  keys   = module.exports.arrayify(keys);
+  values = module.exports.arrayify(values);            
+  let output={};
+  for (let i=0; i < keys.length; i++){
+    if (typeof values[i] !== 'undefined') {output[keys[i]]=values[i];}
+     else {output[keys[i]]=null}
+  }
+  return output;
+}
