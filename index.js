@@ -1,3 +1,5 @@
+const fs              = require('fs');              // File system access
+
 // Convert an array to an object where the key is the specified identifier. This key must exist and have a unique value in every object within the input array.
 // Usage: objectify(someArray, 'SomeKey')
 // "It is purpose that defines, purpose that drives us." -- Agent Smith
@@ -277,7 +279,7 @@ module.exports.arraysToObject = function (keys,values){
   files.forEach(function(file) {
       if (fs.statSync(dir + '/' + file).isDirectory()) {
           filelist.push(dir + file);
-          filelist = findDirs(dir + file + '/', filelist);
+          filelist = module.exports.findDirs(dir + file + '/', filelist);
       }
   });
   return filelist;
