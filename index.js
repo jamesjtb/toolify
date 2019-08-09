@@ -266,3 +266,30 @@ module.exports.arraysToObject = function (keys,values){
   }
   return output;
 }
+
+//#### Find all directories recursively ####
+  //"We must take a hard road, a road unforeseen. There lies our hope, if hope it be." --Elrond
+//useage : listOfPaths = findDirs('startLookingHere');
+  module.exports.findDirs = function (dir, filelist) {
+  var fs = fs || require('fs'),
+  files = fs.readdirSync(dir);
+  filelist = filelist || [];
+  files.forEach(function(file) {
+      if (fs.statSync(dir + '/' + file).isDirectory()) {
+          filelist.push(dir + file);
+          filelist = findDirs(dir + file + '/', filelist);
+      }
+  });
+  return filelist;
+};
+
+//#### Check if a directory has a given file in it ####
+  //"I don’t know, and I would rather not guess." --Frodo
+//useage : if ( containsFile('directoryToSearch','fileName) ) { console.log('Found it') }
+  module.exports.containsFile = function (inPath,inFile){
+    let output = false;
+    fs.readdirSync(inPath).forEach(file => {
+      if (file === inFile ){ output = true;}
+    });
+    return output;
+  }
