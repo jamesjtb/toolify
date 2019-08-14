@@ -72,7 +72,7 @@ module.exports.areObjectsEqual = function (object1, object2, { truthy = false, u
     }
     for (let property in object1) {
       if (typeof object1[property] === 'object' && !exclude.includes(property)) {
-        if (module.exports.compareObjects(object1[property], object2[property], { truthy: truthy, unidirectional: truthy, depth: depth + 1 }) === false) return false;
+        if (module.exports.areObjectsEqual(object1[property], object2[property], { truthy: truthy, unidirectional: truthy, depth: depth + 1 }) === false) return false;
       } else {
         if (truthy === true) { // Use "truthy" comparison if truthy is set to true.
           if (object1[property] != object2[property] && !exclude.includes(property)) return false;
