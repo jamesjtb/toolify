@@ -295,3 +295,13 @@ module.exports.containsFile = function (inPath, inFile) {
   });
   return output;
 }
+
+//#### Strip characters from a list out of input string ####
+//"I kill where I wish and none dare resist" --Smaug
+//useage : cleanedString = stripChars(inputString); OR cleanedString = stripChars(inputString,['a','b']);
+module.exports.stripChars = function (input,bogusList) {
+  if (typeof input !== 'string') {return input;}
+  if (typeof bogusList == 'undefined') { bogusList = ['\u200B','\u200C','\u200D','\uFEFF',]} //use builtin
+  bogusList.forEach(c=>{ input = input.replace(c, '') });
+  return input;
+}
