@@ -6,7 +6,7 @@ const fs = require('fs');              // File system access
 module.exports.objectify = function (array, key) {
   result = {};
   for (let element of array) {
-    if (typeof result[element[key]] === 'object') throw new Error(`The specified key value for "${key}" is not unique in the provided array. Duplicate value was ${element[key]}.`);
+    if (typeof result[element[key]] === 'object') throw new Error(`The specified key value for "${key}" is not unique in the provided array. "${element[key]}" was the duplicate value.`);
     result[element[key]] = element;
   }
   return result;
