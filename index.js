@@ -1,4 +1,4 @@
-const fs = require('fs');              // File system access
+const fs     = require('fs');              // File system access
 
 // Convert an array to an object where the key is the specified identifier. This key must exist and have a unique value in every object within the input array.
 // Usage: objectify(someArray, 'SomeKey')
@@ -294,4 +294,36 @@ module.exports.containsFile = function (inPath, inFile) {
     if (file === inFile) { output = true; }
   });
   return output;
+}
+
+//#### Insert a date/time at the end of a filename, move the .extention to the end of that. ####
+//“All we have to decide is what to do with the time that is given us.” --Gandalf
+//useage : newFilename = insertFilenameDate('filename.jpg');
+module.exports.insertFilenameDate = function (input){
+  let dateString =module.exports.dateTimeString(1);
+  if (typeof input === 'undefined') {return dateString;}
+  let names=input.split('.');
+   if (names.length < 2) {return `${dateString}_${names[0]}`}
+  let last=names.pop();
+  let first=names.join('.');
+  return `${first}__${dateString}.${last}`;
+}
+
+//#### Make a time,date string of NOW without moment ####
+//"It slays king, ruins town, And beats high mountain down." --Gollum
+//useage : timestring = dateString(); [ dateString(1) to use as a filename ]
+module.exports.dateTimeString = function (fileSystemSafe){
+  let d = new Date();
+   let mm = d.getMonth() + 1;
+   let dd = d.getDate();
+   let yy = d.getFullYear();
+   let hh = d.getHours();
+   let mn = d.getMinutes();
+   let ss = d.getSeconds();
+   let ms = d.getMilliseconds();
+   if (fileSystemSafe) {
+     return `${yy}-${mm}-${dd}T${hh}_${mn}_${ss}-${ms}`;
+   } else {
+     return `${yy}-${mm}-${dd}T${hh}:${mn}:${ss}.${ms}`;
+   }
 }
