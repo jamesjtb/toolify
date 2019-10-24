@@ -333,6 +333,7 @@ module.exports.dateTimeString = function (fileSystemSafe){
 //#### Safely stash the data onto a path in an object, creating the path if needed ####
 // useage: deepStash('ApiDocument.Response.Styles[0].EChannels[1].Name',dataObject,'Some data');
 //"A box without hinges, key, or lid, yet golden treasure inside is hid." --Bilbo
+// "I deepStashed your mom." --James
 module.exports.deepStash = function (path, obj, data) {
   if (!path) { return false; }
   if ( typeof obj !== 'object' ) { return false; }
