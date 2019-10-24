@@ -184,6 +184,7 @@ module.exports.deepFetch = function (path, obj) {
   if (typeof obj !== 'undefined') { return obj }
 }
 
+// TODO: Fix nested array anArray[3][1] is true even if [1] of [3] is undefined.
 //#### Safely check if a path exists inside an object ####
 //  useage if ( deepVerify('ApiDocument.Response.Styles',dataObject) ) { do.stuff() }
 //"Few can foresee whither their road will lead them, till they come to its end." --Legolas
@@ -205,6 +206,7 @@ module.exports.deepVerify = function (path, obj) {
   }
 }
 
+//TODO : Looks like if the last emement is an array it ends up array.0 instead of array[0] 
 //#### Function to return an array of lines containing all of the paths in an object and a guess at their data types ####
 // useage: let arrayOfLines = objectMap(dataObject,'MyPrefix');
 //"The world is not in your books and maps, it’s out there." – Gandalf
@@ -327,3 +329,101 @@ module.exports.dateTimeString = function (fileSystemSafe){
      return `${yy}-${mm}-${dd}T${hh}:${mn}:${ss}.${ms}`;
    }
 }
+
+//#### Safely stash the data onto a path in an object, creating the path if needed ####
+// useage: deepStash('ApiDocument.Response.Styles[0].EChannels[1].Name',dataObject,'Some data');
+//"A box without hinges, key, or lid, yet golden treasure inside is hid." --Bilbo
+module.exports.deepStash = function (path, obj, data) {
+  if (!path) { return false; }
+  if ( typeof obj !== 'object' ) { return false; }
+  let currentObj = obj;
+
+  let parts = this.parseObjectPath(path); 
+
+  let i=0;
+  while ( i < parts.length-1 ) {
+      if ( typeof currentObj[parts[i]] == 'undefined' ) { 
+       if ( typeof parts[i+1] == 'number')  { currentObj[parts[i]]=[] } else { currentObj[parts[i]]={} }
+      }
+      currentObj=currentObj[parts[i]];
+    i++;
+
+  }
+
+  currentObj[ parts[i]] =data;
+  return true;
+}
+
+//#### parse a string containng an object path into an array of key names ####
+// useage: keys = parseObjectPath('this.that.and[0].the['other'].thing');
+//"Go not to the Elves for counsel, for they will say both no and yes." --Frodo
+module.exports.parseObjectPath = function(input){
+  let output=[];
+  if(typeof str !== 'string'){output}
+
+      const getNext = function (pathstring) {
+        if(typeof pathstring !== 'string'){return}
+        if (pathstring.length < 1){return}
+
+        dot     = pathstring.indexOf('.');
+        bracket = pathstring.indexOf('[');
+        
+        // *** determine opType ***
+        let opType;
+          while (typeof opType == 'undefined') {
+            if ((dot === -1) && (bracket === -1))    { opType = 'noop';       continue; }  //no dots or brackets
+            if (dot === 0)                           { opType = 'dotfirst';   continue; }  //dot in first position
+            if ( (dot === -1) && (bracket > 0) )     { opType = 'brack';      continue; }  //bracket (not first) and no dot
+            if ( (dot === -1) && (bracket === 0) )   { opType = 'brackfirst'; continue; }  //bracket first and no dot
+            if ( (dot > -1)   && (bracket <  0 ) )   { opType = 'dot';        continue; }  //dot but no brackets
+            if ( dot < bracket )                     { opType = 'dot';        continue; }  //dot before bracket
+            if (bracket === 0)                       { opType = 'brackfirst'; continue; }  //bracket in first position
+            if (bracket > 0)                         { opType = 'brack';      continue; }  //bracket anywhere else
+            opType = 'noop';  //all else fails, just noop
+          }
+
+      // *** Do the operation ***
+        //noop
+          if (opType === 'noop') {
+            if (pathstring.length > 0) {  output.push(pathstring); }
+            return;
+          }
+        //dotfirst
+          if (opType === 'dotfirst') {
+            return pathstring.substr(dot+1);
+          }
+        //dot
+          if (opType === 'dot') {
+            output.push(pathstring.substr(0,dot));
+            return pathstring.substr(dot+1);
+          }
+        //bracket first
+          if (opType === 'brackfirst') {
+            if ( pathstring[bracket+1] === '\'' ) {
+              let closingBracket = pathstring.indexOf("']"); 
+              output.push(pathstring.substr(bracket+2,closingBracket-2));
+            return pathstring.substr(closingBracket+2);
+            }
+            if ( pathstring[bracket+1] === '\"' ) {
+              let closingBracket = pathstring.indexOf('"]'); 
+              output.push(pathstring.substr(bracket+2,closingBracket-2));
+              return pathstring.substr(closingBracket+2);
+            }
+            let closingBracket = pathstring.indexOf(']'); 
+            output.push(parseInt(pathstring.substr(bracket+1,closingBracket-1)));
+            return pathstring.substr(closingBracket+1);
+          }
+        //bracket
+          if (opType === 'brack') {
+            output.push(pathstring.substr(0,bracket));
+            return pathstring.substr(bracket);
+          }
+      
+      }
+
+  while (typeof input !== 'undefined') {
+    input = getNext(input);
+  }
+  return output;
+}
+
