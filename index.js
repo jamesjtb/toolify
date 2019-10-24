@@ -50,18 +50,20 @@ module.exports.denilify = function (input, attributeNode = 'attr') {
 }
 
 // Compare the properties AND values of two objects; if they are all equalivalent, then return true; otherwise, return false. Use truthiness if the third argument, truthy, is true.
-// The fourth argument, "depth", is used by the function itself when it is called recursively. 
+// the "depth" option is used by the function itself when it is called recursively. 
 // "There is a difference between knowing the path and walking the path." -- Morpheus
-module.exports.areObjectsEqual = function (object1, object2, { truthy = false, unidirectional = false, depth = 0, exclude = [] }) {
+module.exports.areObjectsEqual = function (object1, object2, { truthy = false, unidirectional = false, depth = 0, exclude = [], ignoreMaxDepth = false }) {
   try {
     if (truthy == undefined) truthy = false;
     if (unidirectional == undefined) unidirectional = false;
     if ((object1 == null && object2 != null) || (object1 != null && object2 == null)) return false;
-    if (object1 == null && object2 == null) return true;
-    // Guard statement for the possibility of an infinite recursion
-    let maxDepth = 5000;
-    if (depth > maxDepth) throw new Error(`The compareObjects function has exceeded the predefined maximum object depth of ${maxDepth}. Check your objects for any self references.`);
-
+    if (object1 === null && object2 === null) return true;
+    if (object1 === undefined && object2 === undefined) return true;
+    // Guard statement for the possibility of an infinite recursion. Ignore this using the "ignoreMaxDepth" option.
+    if (!ignoreMaxDepth) {
+      let maxDepth = 5000;
+      if (depth > maxDepth) throw new Error(`The compareObjects function has exceeded the predefined maximum object depth of ${maxDepth}. Check your objects for any self references.`);  
+    }
     // Main Logic
 
     if (!unidirectional) { // if the comparison is not unidirectional...
