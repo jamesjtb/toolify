@@ -22,8 +22,17 @@ module.exports.arrayify = function (input) {
   }
 }
 
+// Check if input is an empty object.
+// "You're empty." -- Agent Smith
+module.exports.isObjectEmpty = function (input) {
+  for (var key in input) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
+}
+
 // if input is undefined, make it null instead.
-// "You're empty." --Agent Smith
+// "So are you." -- Neo
 module.exports.nullify = function (input) {
   if (input === undefined) {
     return null;
