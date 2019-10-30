@@ -272,3 +272,59 @@ console.log(areObjectsEqual(obj1, obj2, options));
 console.log(areObjectsEqual(obj2, obj1, options));
 // >> false
 ```
+
+### pushIfNotExist
+
+Only push an item if its not already in the array (idempotent push)
+
+Usage:
+
+```javascript
+pushIfNotExist(dataToPush, targetArray);
+```
+
+#### pushIfNotExist example
+
+```javascript
+const { pushIfNotExist } = require('toolify');
+
+let array = [1, 13, 7, 3];
+
+pushIfNotExist(4, array); // Push a non-existent value
+console.log(array);
+// >> [1, 13, 7, 3, 4]
+
+pushIfNotExist(13, array); // Push an existing value
+console.log(array);
+// >> [1, 13, 7, 3, 4]
+```
+
+### asynctimeout
+
+An asynchronous version of javascript's native ```setTimeout```.
+
+Usage:
+
+```javascript
+  await asynctimeout(delay);
+```
+
+### removeNull
+
+Remove all properties with null values of an input object.
+
+#### removeNull example
+
+```javascript
+let { removeNull } = require('toolify');
+
+let input = {
+  key1: 'value',
+  key2: null
+}
+
+t.removeNull(input);
+
+console.log(input);
+// >> { key1: 'value' }
+```
