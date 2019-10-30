@@ -1,6 +1,6 @@
 {
   "name": "toolify",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "description": "Various quality of life tools",
   "main": "index.js",
   "scripts": {
