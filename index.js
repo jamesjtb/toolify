@@ -26,7 +26,7 @@ module.exports.arrayify = function (input) {
 // "You're empty." -- Agent Smith
 module.exports.isObjectEmpty = function (input) {
   for (var key in input) {
-    if (obj.hasOwnProperty(key)) return false;
+    if (input.hasOwnProperty(key)) return false;
   }
   return true;
 }
