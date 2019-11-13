@@ -238,6 +238,8 @@ module.exports.objectMap = function (obj, prefix = '') {
       let partOfArray = (obj[line] instanceof Array);
 
       if (dtype != 'object') { output.push(`${prefix}.${line} :: ${dtype}`) }
+      else if ( obj[line] === null ) { output.push(`${prefix}.${line} :: null`) }
+      
       else {
         if (partOfArray) { lineify(obj[line], `${prefix}.${line}`, partOfArray) }
         else {
