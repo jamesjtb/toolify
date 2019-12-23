@@ -118,6 +118,7 @@ module.exports.removeNull = function (obj) {
     (obj[key] && typeof obj[key] === 'object') && self.removeNull(obj[key]) ||
       (obj[key] === null) && delete obj[key]
   });
+  return obj;
 }
 
 //#### Find a json object if it exists: where (the object), what (the search term, a RegEx or plain text), searchMethod search in the key, data, or both ####
