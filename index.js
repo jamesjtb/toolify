@@ -31,6 +31,13 @@ module.exports.isObjectEmpty = function (input) {
   return true;
 }
 
+// Checks for null, undefined, and empty string
+// "You're empty." -- Agent Smith
+// I know I reused the quote. But come on.
+module.exports.isEmpty = function (input) {
+  return (input == null || input === '');
+}
+
 // if input is undefined, make it null instead.
 // "So are you." -- Neo
 module.exports.nullify = function (input) {
@@ -118,6 +125,7 @@ module.exports.removeNull = function (obj) {
     (obj[key] && typeof obj[key] === 'object') && self.removeNull(obj[key]) ||
       (obj[key] === null) && delete obj[key]
   });
+  return obj;
 }
 
 //#### Find a json object if it exists: where (the object), what (the search term, a RegEx or plain text), searchMethod search in the key, data, or both ####
