@@ -31,6 +31,13 @@ module.exports.isObjectEmpty = function (input) {
   return true;
 }
 
+// Checks for null, undefined, and empty string
+// "You're empty." -- Agent Smith
+// I know I reused the quote. But come on.
+module.exports.isEmpty = function (input) {
+  return (input == null || input === '');
+}
+
 // if input is undefined, make it null instead.
 // "So are you." -- Neo
 module.exports.nullify = function (input) {
