@@ -1,4 +1,6 @@
 const fs     = require('fs');              // File system access
+const path   = require('path');            // Path manipulations
+
 
 // Convert an array to an object where the key is the specified identifier. This key must exist and have a unique value in every object within the input array.
 // Usage: objectify(someArray, 'SomeKey')
@@ -296,17 +298,43 @@ module.exports.arraysToObject = function (keys, values) {
   return output;
 }
 
+//#### Find all parent directory just from text of path ####
+//"I go now to the halls of waiting to sit beside my fathers" --Thorin
+module.exports.getParentDir = function (startPath) {
+  if (typeof startPath == 'undefined') { return; }
+  let output = path.dirname(startPath).split(path.sep).join('/')+'/';
+  if (output == '//') {output='/';}
+  return output;
+}
+
+//#### Find out if a directory or file is readable/writeable ####
+
+module.exports.isReadable = function (startPath) {
+  try { fs.accessSync(startPath, fs.constants.R_OK); return true;} 
+    catch (err) { return false; }
+}
+module.exports.isWriteable = function (startPath) {
+  try { fs.accessSync(startPath, fs.constants.W_OK); return true;} 
+    catch (err) { return false; }
+}
+
+
 //#### Find all directories recursively ####
 //"We must take a hard road, a road unforeseen. There lies our hope, if hope it be." --Elrond
 //useage : listOfPaths = findDirs('startLookingHere');
-module.exports.findDirs = function (dir, filelist) {
+module.exports.findDirs = function (startPath, depth, filelist) {
+  if (typeof depth == 'undefined') { depth=-1; }
+    if (depth == 0) { return filelist; };
+  if (typeof startPath == 'undefined') { return; }
+  startPath=startPath.replace(/\/$/, ''); startPath=startPath+'/';        //make sure it ends with exactly one '/'              
+   if ( module.exports.isReadable(startPath) !== true ) {return [];}         //make sure we're even allowed to read it
   var fs = fs || require('fs'),
-    files = fs.readdirSync(dir);
+    files = fs.readdirSync(startPath);
   filelist = filelist || [];
   files.forEach(function (file) {
-    if (fs.statSync(dir + '/' + file).isDirectory()) {
-      filelist.push(dir + file);
-      filelist = module.exports.findDirs(dir + file + '/', filelist);
+    if (fs.statSync(startPath + '/' + file).isDirectory()) {
+      filelist.push(startPath + file);
+      filelist = module.exports.findDirs(startPath + file + '/', depth-1 ,filelist);
     }
   });
   return filelist;
@@ -314,14 +342,72 @@ module.exports.findDirs = function (dir, filelist) {
 
 //#### Check if a directory has a given file in it ####
 //"I don’t know, and I would rather not guess." --Frodo
-//useage : if ( containsFile('directoryToSearch','fileName) ) { console.log('Found it') }
-module.exports.containsFile = function (inPath, inFile) {
+//useage : if ( containsFile('directoryToSearch','fileName', 'file') ) { console.log('Found it') }
+module.exports.containsFile = function (inPath, inFile, type) {
+  inPath=inPath.replace(/\/$/, ''); inPath=inPath+'/';        //make sure it ends with exactly one '/'     
+  if (typeof type == 'undefined') { type='file'; }                     //look for files by default
+    if ((type !== 'directory') && (type !== 'file')) { type='file'; }     //look for files by default
   let output = false;
+  if ( module.exports.isReadable(inPath) !== true ) {return false;}         //make sure we're even allowed to read it
   fs.readdirSync(inPath).forEach(file => {
-    if (file === inFile) { output = true; }
+    if (file === inFile) { 
+      if (type == 'directory') { if (fs.lstatSync(inPath+file).isDirectory()) { output = true; }}
+      if (type == 'file')      { if (fs.lstatSync(inPath+file).isFile())      { output = true; }}
+    }
   });
   return output;
 }
+
+//#### Find the first file or directory below startPath that matches the searchFor, return its full path ####
+//“He that breaks a thing to find out what it is has left the path of wisdom.” --Gandalf
+//useage : findBelow(__dirname,'config.json','file',2); find a config.json file in current project but don't look farther than 2 levels deep
+  //Note : levels start counting at 1, there is no 0th level
+module.exports.findBelow = function(startPath,searchFor,type,levels){
+  //guard the inputs
+   if (typeof searchFor == 'undefined') { return; }                     //bail if no search term
+   if (typeof type == 'undefined') { type='file'; }                     //look for files by default
+    if ((type !== 'directory') && (type !== 'file')) { type='file'; }     //look for files by default
+   if (typeof levels == 'undefined') { levels=5; }                      //only go 5 levels by default
+     if (levels == null) { levels=5; }                                  //only go 5 levels by default   
+     if (typeof levels !== 'number') { levels=5; }                      //only go 5 levels by default
+     if ( levels < 1 ) {return;}                                        //only go 5 levels by default
+   if (typeof startPath == 'undefined') { startPath=__dirname }         //where should we start looking
+    if (!fs.existsSync(startPath)){ return; }                           //start path doesn't exist
+    startPath=startPath.replace(/\/$/, '');                             //drop trailing slash if present
+  
+  if ( module.exports.containsFile(startPath,searchFor,type) ) { return `${startPath}/${searchFor}`; } 
+  let searchDirs = module.exports.findDirs(startPath, 1);
+  for (let dir of searchDirs ) {
+    let foundFile = module.exports.findBelow(dir,searchFor,type,levels-1);                    //RECURSION
+    if (typeof foundFile !== 'undefined' ) { return foundFile; }
+  }
+  
+ };
+
+ //#### Just like findBelow but will look in both directions ####
+ //“Well, you can go on looking forward..." --Gandalf
+ module.exports.findClosest = function(searchFor,startPath,type,levels){
+   let result;
+   //guard the inputs
+   if (typeof searchFor == 'undefined') { return; }                     //bail if no search term
+   if (typeof type == 'undefined') { type='file'; }                     //look for files by default
+    if ((type !== 'directory') && (type !== 'file')) { type='file'; }     //look for files by default
+   if (typeof levels == 'undefined') { levels=5; }                      //only go 5 levels by default
+    if (levels == null) { levels=5; }                                  //only go 5 levels by default   
+    if (typeof levels !== 'number') { levels=5; }                      //only go 5 levels by default
+    if ( levels < 1 ) {return;}                                        //only go 5 levels by default
+   if (typeof startPath == 'undefined') { startPath=__dirname }         //where should we start looking
+    if (!fs.existsSync(startPath)){ return; }                           //start path doesn't exist
+    startPath=startPath.replace(/\/$/, '');                             //drop trailing slash if present
+
+  result = module.exports.findBelow(startPath,searchFor,type,levels);
+  while ( (typeof result == 'undefined') && (levels > 0) ) { 
+    levels--;
+    startPath = module.exports.getParentDir(startPath);
+    result = module.exports.findBelow(startPath,searchFor,type,levels);
+  }
+ return result;
+ };
 
 //#### Insert a date/time at the end of a filename, move the .extention to the end of that. ####
 //“All we have to decide is what to do with the time that is given us.” --Gandalf
@@ -451,4 +537,5 @@ module.exports.parseObjectPath = function(input){
   }
   return output;
 }
+
 
